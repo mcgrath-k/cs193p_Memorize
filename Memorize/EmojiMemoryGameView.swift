@@ -12,19 +12,32 @@ struct EmojiMemoryGameView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                Text("Theme: \(viewModel.themeName)").frame(maxWidth: .infinity, alignment: .leading).foregroundStyle(viewModel.themeColor)
+                Text("Score: \(viewModel.score)").frame(alignment: .trailing)
+            }
             ScrollView{
                 cards
                     .animation(.default, value: viewModel.cards)
             }
-            Button("Shuffle") {
-                viewModel.shuffle()
-            }
+            HStack {
+                Button("Shuffle") {
+                    viewModel.shuffle()
+                }
+                Spacer()
+                Button("New Game") {
+                    viewModel.newGame()
+                }
+            }.padding(.horizontal, 20)
+                .padding(.vertical, 10)
+            
+            
         }
         .padding()
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 90), spacing: 0)], spacing: 0) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
             ForEach(viewModel.cards) { card in
                 CardView(card)
                     .aspectRatio(2/3, contentMode: .fit)
@@ -33,7 +46,7 @@ struct EmojiMemoryGameView: View {
                         viewModel.choose(card)
                     }
             }
-        }.foregroundColor(Color.orange)
+        }.foregroundColor(viewModel.themeColor)
     }
 }
 
