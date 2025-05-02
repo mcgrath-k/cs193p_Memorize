@@ -10,16 +10,20 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
+    private let cardAspectRatio: CGFloat = 2/3
+    
     var body: some View {
         VStack {
             HStack {
-                Text("Theme: \(viewModel.themeName)").frame(maxWidth: .infinity, alignment: .leading).foregroundStyle(viewModel.themeColor)
-                Text("Score: \(viewModel.score)").frame(alignment: .trailing)
+                Text("Theme: \(viewModel.themeName)")
+                    .foregroundStyle(viewModel.themeColor)
+                    .animation(.default, value: viewModel.themeName)
+                Spacer()
+                Text("Score: \(viewModel.score)")
+                    .animation(.default, value: viewModel.score)
             }
-            ScrollView{
-                cards
-                    .animation(.default, value: viewModel.cards)
-            }
+            cards
+                .animation(.default, value: viewModel.cards)
             HStack {
                 Button("Shuffle") {
                     viewModel.shuffle()
@@ -36,17 +40,15 @@ struct EmojiMemoryGameView: View {
         .padding()
     }
     
-    var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
-            ForEach(viewModel.cards) { card in
+    private var cards: some View {
+        AspectVGrid(viewModel.cards, cardAspectRatio: cardAspectRatio) { card in
                 CardView(card)
-                    .aspectRatio(2/3, contentMode: .fit)
                     .padding(4)
                     .onTapGesture {
                         viewModel.choose(card)
                     }
-            }
-        }.foregroundColor(viewModel.themeColor)
+        }
+        .foregroundColor(viewModel.themeColor)
     }
 }
 
