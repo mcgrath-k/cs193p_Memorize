@@ -16,6 +16,8 @@ import SwiftUI
 
 class EmojiMemoryGame: ObservableObject {
     
+    typealias Card = MemoryGame<String>.Card
+    
     @Published private var theme: Theme
     @Published private var model: MemoryGame<String>
 
@@ -25,13 +27,7 @@ class EmojiMemoryGame: ObservableObject {
         self.model = EmojiMemoryGame.createMemoryGame(theme: chosenTheme)
     }
     
-    var themeName: String {
-        theme.name
-    }
-    var score: Int {
-        model.score
-    }
-    
+
     var themeColor: Color {
         switch theme.colorName {
         case "orange": return .orange
@@ -67,8 +63,14 @@ class EmojiMemoryGame: ObservableObject {
         ThemeStore.randomTheme()
     }
     
-    var cards: Array<MemoryGame<String>.Card> {
-        return model.cards
+    var cards: Array<Card> {
+        model.cards
+    }
+    var themeName: String {
+        theme.name
+    }
+    var score: Int {
+        model.score
     }
 
     
@@ -83,7 +85,7 @@ class EmojiMemoryGame: ObservableObject {
         model = EmojiMemoryGame.createMemoryGame(theme: theme)
     }
     
-    func choose(_ card: MemoryGame<String>.Card) {
+    func choose(_ card: Card) {
         model.choose(card)
     }
 }
